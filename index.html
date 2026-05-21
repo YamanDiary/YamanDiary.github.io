@@ -3,56 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bethany Hamilton Survival Diary</title>
+<title>Voices of Survival</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
+  * { box-sizing: border-box; }
   body {
-    background-color: #e6f7ff;
-    color: #003366;
-    font-family: Arial, sans-serif;
-    max-width: 800px;
-    margin: 0 auto;
+    background: linear-gradient(135deg, #1a0a00 0%, #3d1f00 50%, #1a0a00 100%);
+    background-attachment: fixed;
+    color: #2c1a00;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    margin: 0;
     padding: 20px;
+    min-height: 100vh;
   }
-  center { text-align: center; }
-  hr { border: 1px solid #003366; width: 80%; }
-  img { max-width: 100%; border-radius: 8px; }
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    background: rgba(255, 248, 220, 0.97);
+    padding: 40px;
+    border-radius: 4px;
+    box-shadow: 0 0 60px rgba(0,0,0,0.7), inset 0 0 30px rgba(180,130,60,0.1);
+    border: 2px solid #8b6914;
+  }
+  h1 { text-align: center; color: #5a2d00; font-size: 2em; margin-bottom: 4px; letter-spacing: 1px; }
+  h2 { text-align: center; color: #7a4a10; font-size: 1.1em; font-style: italic; margin-top: 0; }
+  .byline { text-align: center; color: #8b6914; font-size: 0.9em; margin-bottom: 10px; }
+  .banner-img { display: block; margin: 18px auto; border-radius: 6px; border: 3px solid #8b6914; box-shadow: 0 4px 16px rgba(0,0,0,0.3); max-width: 100%; }
+  hr { border: none; border-top: 2px solid #c8a04a; margin: 24px auto; width: 80%; }
+
+  .entry {
+    margin-bottom: 36px;
+    padding: 22px 26px;
+    border-left: 4px solid #c8a04a;
+    background: rgba(255, 245, 200, 0.5);
+    border-radius: 0 6px 6px 0;
+  }
+  .entry h3 { color: #5a2d00; margin-top: 0; font-size: 1.05em; }
+  .entry p { line-height: 1.9; margin: 0; color: #2c1a00; }
+  .entry b { color: #5a2d00; }
+
+  .qr-section { text-align: center; margin: 30px 0; }
+  .qr-section img { border: 3px solid #8b6914; border-radius: 6px; padding: 6px; background: white; }
+  .qr-section p { color: #7a4a10; font-size: 0.88em; margin-top: 6px; }
+
+  .useful-links { text-align: center; }
+  .useful-links ul { list-style: none; padding: 0; }
+  .useful-links ul li { margin: 6px 0; }
+  .useful-links ul li a { color: #5a2d00; text-decoration: underline; }
+  .final-msg { text-align: center; font-style: italic; color: #7a4a10; font-size: 1.05em; margin-top: 20px; }
+
+  /* ---- Comments ---- */
+  h3.comments-title { color: #5a2d00; }
   input, textarea {
     width: 100%;
-    padding: 8px;
+    padding: 9px 12px;
     margin-bottom: 8px;
-    box-sizing: border-box;
-    border: 1px solid #003366;
+    border: 1px solid #c8a04a;
     border-radius: 4px;
+    font-family: Georgia, serif;
     font-size: 14px;
-    background: #fff;
-    color: #003366;
+    background: #fffdf0;
+    color: #2c1a00;
   }
   textarea { height: 80px; resize: vertical; }
   button {
-    background-color: #003366;
-    color: white;
-    padding: 10px 24px;
+    background: #5a2d00;
+    color: #ffe8a0;
+    padding: 10px 26px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
+    font-family: Georgia, serif;
   }
-  button:hover { background-color: #00509e; }
-  button:disabled { background-color: #aaa; cursor: not-allowed; }
-  #comments {
-    margin-top: 12px;
-    max-height: 420px;
-    overflow-y: auto;
-    padding-right: 4px;
-  }
+  button:hover { background: #7a4000; }
+  button:disabled { background: #aaa; cursor: not-allowed; }
+  #comments { margin-top: 12px; max-height: 420px; overflow-y: auto; padding-right: 4px; }
   #comments::-webkit-scrollbar { width: 6px; }
-  #comments::-webkit-scrollbar-track { background: #c5e8f7; border-radius: 4px; }
-  #comments::-webkit-scrollbar-thumb { background: #005599; border-radius: 4px; }
+  #comments::-webkit-scrollbar-track { background: #f5e8c0; border-radius: 4px; }
+  #comments::-webkit-scrollbar-thumb { background: #8b6914; border-radius: 4px; }
   .comment-block {
-    background: white;
-    border-left: 4px solid #003366;
-    padding: 8px 12px;
+    background: #fffdf0;
+    border-left: 4px solid #c8a04a;
+    padding: 9px 14px;
     margin: 8px 0;
     border-radius: 4px;
     display: flex;
@@ -60,78 +93,67 @@
     justify-content: space-between;
     gap: 8px;
   }
-  .comment-content { flex: 1; }
+  .comment-content { flex: 1; font-size: 14px; color: #2c1a00; }
   .admin-actions { display: flex; gap: 6px; flex-shrink: 0; }
   .admin-actions button { padding: 4px 10px; font-size: 12px; }
-  .btn-delete { background-color: #8b0000; }
-  .btn-delete:hover { background-color: #600000; }
-  .btn-edit { background-color: #004d00; }
-  .btn-edit:hover { background-color: #003300; }
+  .btn-delete { background: #8b0000; }
+  .btn-delete:hover { background: #600000; }
+  .btn-edit { background: #1a5200; }
+  .btn-edit:hover { background: #0d3300; }
   #status { font-size: 13px; margin-top: 6px; min-height: 18px; }
+  #swearWarning { margin: 4px 0; }
 
+  /* ---- Admin badge ---- */
   #adminBadge {
     display: none;
     position: fixed;
     top: 12px; right: 16px;
-    background: #003366;
-    color: #b0d8f0;
+    background: #5a2d00;
+    color: #ffe8a0;
     padding: 6px 16px;
     border-radius: 4px;
     font-size: 13px;
     font-weight: bold;
-    border: 1px solid #005599;
+    border: 1px solid #c8a04a;
     z-index: 999;
     letter-spacing: 0.5px;
   }
 
+  /* ---- Modals ---- */
   .overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 30, 60, 0.6);
+    background: rgba(30, 15, 0, 0.65);
     z-index: 1000;
     justify-content: center;
     align-items: center;
   }
   .overlay.open { display: flex; }
-
   .modal {
-    background: #d0ecfa;
-    border: 2px solid #003366;
+    background: #fff8dc;
+    border: 2px solid #8b6914;
     border-radius: 6px;
     width: 340px;
     overflow: hidden;
-    box-shadow: 0 6px 28px rgba(0,30,80,0.4);
+    box-shadow: 0 6px 28px rgba(0,0,0,0.5);
   }
   .modal-header {
-    background: #003366;
-    color: #b0d8f0;
+    background: #5a2d00;
+    color: #ffe8a0;
     padding: 12px 18px;
     font-size: 15px;
     font-weight: bold;
-    letter-spacing: 0.3px;
+    font-family: Georgia, serif;
   }
-  .modal-body {
-    padding: 18px 18px 14px;
-  }
-  .modal-body input,
-  .modal-body textarea {
-    background: #eaf5ff;
-    border: 1px solid #005599;
-    color: #003366;
-  }
-  .modal-body input:focus,
-  .modal-body textarea:focus {
-    outline: none;
-    border-color: #003366;
-    background: #fff;
-  }
+  .modal-body { padding: 18px 18px 14px; }
+  .modal-body input, .modal-body textarea { background: #fffdf0; border: 1px solid #c8a04a; color: #2c1a00; }
   .btn-row { display: flex; gap: 8px; margin-top: 10px; }
   .btn-row button { flex: 1; padding: 9px; font-size: 14px; }
-  .btn-cancel { background: #4a6a88; }
-  .btn-cancel:hover { background: #355270; }
-  .btn-save { background: #004d00; }
-  .btn-save:hover { background: #003300; }
+  .btn-cancel { background: #6b5533; }
+  .btn-cancel:hover { background: #4a3a20; }
+  .btn-save { background: #1a5200; }
+  .btn-save:hover { background: #0d3300; }
   #adminError { color: #8b0000; font-size: 13px; min-height: 18px; margin-top: 4px; }
 </style>
 </head>
@@ -170,61 +192,173 @@
   </div>
 </div>
 
-<center>
-  <h1>🌊 Bethany Hamilton's Survival Diary 🦈</h1>
-  <h2>"Courage is stronger than fear"</h2>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Bethany_Hamilton_2019.jpg" width="300" alt="Bethany Hamilton">
-</center>
+<div class="container">
 
-<hr>
+  <center>
+    <h1>📖 Voices of Survival</h1>
+    <h2>"Courage is stronger than fear"</h2>
+    <p class="byline">Designed by Yaman Haddad &amp; Gasser Mohammed</p>
+    <img class="banner-img" src="https://i1-c.pinimg.com/736x/89/06/84/890684b7cf17ad28618cdf496a86e69d.jpg" width="480" alt="Voices of Survival">
+  </center>
 
-<h3>📖 Dear Diary</h3>
-<p>I still remember the day everything changed. I was surfing in <b>Kauai, Hawaii</b>,
-chasing my dream of becoming a professional surfer.</p>
-<p>Suddenly, a shark attacked me. I was terrified and in pain.
-But something inside told me to <b>persevere</b>.</p>
-<p>Even after losing my arm, I stayed <b>hopeful</b> and <b>determined</b>.</p>
-<p>I returned to the ocean just one month later and kept <b>fighting</b> every day.</p>
+  <hr>
 
-<center>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Bethany_Hamilton_surfing.jpg" width="300" alt="Bethany Hamilton surfing">
-</center>
+  <!-- Yaman Bassam 8B1 -->
+  <div class="entry">
+    <h3>📖 Yaman Bassam 8B1 — Dear Diary</h3>
+    <p>I still remember the day everything changed. I was surfing in <b>Kauai, Hawaii</b>, chasing my dream of becoming a professional surfer.<br><br>
+    Suddenly, a shark attacked me. I was terrified and in pain. But something inside told me to <b>persevere</b>.<br><br>
+    Even after losing my arm, I stayed <b>hopeful</b> and <b>determined</b>. I returned to the ocean just one month later and kept <b>fighting</b> every day.<br><br>
+    Today, I inspire others to never give up no matter how hard life becomes.</p>
+  </div>
 
-<p>Today, I inspire others to never give up no matter how hard life becomes.</p>
+  <!-- Tala 8G3 -->
+  <div class="entry">
+    <h3>📖 Tala, 8G3 — Dear Diary</h3>
+    <p>I was only a kid, and wrongly accused of a crime I didn't commit. As an African American kid, many people only saw the color of my skin instead of the truth. They took away my youth and never believed me — my freedom and chance were taken away so easily. It felt outrageous and deeply unjust.<br><br>
+    At first, I froze in fear and disbelief, but over time I developed resilience and stayed hopeful. One coping strategy that helped me survive was believing justice would eventually come. Even though the trauma stayed with me, I refused to give up by remembering my family, my friends, and the life I once had before prison. If I had given up hope completely, I would have lost myself entirely. Instead, I chose to endure the suffering and continue fighting internally.<br><br>
+    My dignity, resilience and my own human rights — eradicated. I was overlooked and sent my whole life behind bars and it felt endless. I miss my youthful years, walking happily, laughing until my stomach hurts, hanging around my best friends. All was assumed by a false accusation.<br><br>
+    But I was patient, since I had to wait years for people to finally hear the truth. I was also tenacious because I never stopped believing my innocence would someday be proven. People can try to silence someone, but deep inside, the truth stays alive. I believe justice will come even if it takes centuries because it matters to hear the truth. Until then I have to stay strong.<br><br>
+    <b>— A voice of justice</b></p>
+  </div>
 
-<hr>
+  <!-- Farah 8G3 — Aron Ralston -->
+  <div class="entry">
+    <h3>📖 Farah, 8G3 — Diary of Aron Ralston</h3>
+    <p><b>April 26, 2003</b><br>
+    My name is Aron Ralston. I went on a hiking trip all by myself and did not inform anyone about my hiking plans. As I was walking through the deep, narrow canyons, a massive boulder fell — it first smashed on my left hand, and then crushed my right hand. Now my arms are trapped.<br><br>
+    <b>April 27, 2003</b><br>
+    I felt terrified and helpless as I sit trapped between the cold canyon walls. The pain in my arm is unbearable, and I regret not telling anyone about my adventure. I keep thinking, "Will anyone find me?" The dark silence around me fills me up.<br><br>
+    Still, I am trying to stay brave and positive. I know I cannot give up. I tell myself, "I'm strong enough to survive this." I drank my little water and ate my two burritos and tried to think how to escape. Even though fear fills up my mind, a small part of me still feels hopeful that I will make it home safely.</p>
+  </div>
 
-<h3>🔗 Useful Links</h3>
-<ul>
-  <li><a href="https://bethanyhamilton.com" target="_blank">Official Website</a></li>
-  <li><a href="https://en.wikipedia.org/wiki/Bethany_Hamilton" target="_blank">Wikipedia</a></li>
-  <li><a href="https://www.youtube.com/watch?v=R8l8X4q2f1Q" target="_blank">Video</a></li>
-</ul>
+  <!-- Retal 8G3 — Aron Ralston -->
+  <div class="entry">
+    <h3>📖 Retal, 8G3 — Diary of Aron Ralston</h3>
+    <p>I didn't tell anyone about my plans. I'm going canyoneering in Bluejohn Canyon. I packed two burritos and water.<br><br>
+    Today is the day I go to the canyon. When I reached Wayne County, Utah, I canyoneered for a while until a boulder became dislodged and crashed onto my arm. It's heavy. Blood drips from my arm onto my shoes. I can't move it. Dark red blood trickles down as I lose sensation in my arm. My arm turns a bluish tint. I can't feel it. Tingles and numbness spread through my arm. Am I going to survive? I didn't say goodbye…<br><br>
+    It has been a day since I got trapped here. My lips chap as I reach for the water. My stomach churns. Do I scream for help? Can I really cut off my arm? Thoughts overwhelm my mind as I scramble for ideas to escape alive.<br><br>
+    My pocket knife. Right. I'll wait.<br><br>
+    My phone has no service. Calm down. If I stay like this, I won't make it. I eat some of my food and take small sips of water to keep myself calm. My arm is losing circulation. I record a video to say goodbye to my family. I experiment with tourniquets to prepare for amputating my arm.<br><br>
+    My food supply is decreasing, and my water has run out. Regrets and what-ifs run through my head. I can't scream. I have nothing to drink. The pain in my arm is gone, replaced by numbness.<br><br>
+    Today marks the fifth day. I have nothing left to eat or drink. I'm seeing things. I close my eyes as visions of me playing with a child without my arm overwhelm my mind. A small sense of warmth fills me. Maybe I'll survive.<br><br>
+    This is the sixth day. It's time.<br><br>
+    I bite my lip as I prepare to amputate my arm. "It's gonna be okay," I repeat as I take out my pocket knife. Hours pass as I continue cutting. Finally, I sigh in relief. It's over.<br><br>
+    I rush out and find a family nearby. They rush me to safety and call the authorities. I survived. Though I lost an arm, I made it back alive.<br><br>
+    <b>Yours, Aron</b></p>
+  </div>
 
-<hr>
+  <!-- Mahmoud 8B1 -->
+  <div class="entry">
+    <h3>📖 Mahmoud, 8B1 — Diary of Aron Ralston</h3>
+    <p><b>Day 1</b><br>
+    Today marks the first day of me being stuck. I have only 1 litre of water. It's hot here at Bluejohn Canyon. I'm very frustrated at myself for going hiking alone. I'm trying to save as much food and water as I can.<br><br>
+    <b>Day 2 — April 27, 2003</b><br>
+    I've tried to use my climbing ropes and gear to create a pulley system to move the rock; sadly, it didn't work. I regret ever coming here. I'm getting very tired and only have 2 burritos left.<br><br>
+    <b>Day 3 — April 28</b><br>
+    I can't feel my arm at all. I'm in serious trouble. I'm ready to say goodbye. I recorded video messages for my family on the camcorder. I explained everything that happened. I'm almost out of water and food. It's getting rough. My hope is fading.<br><br>
+    <b>Day 4 — April 29</b><br>
+    Today, I ran out of food and water. I have to get out fast. The boulder hasn't moved an inch, so I had to try cutting my arm with a knife that's dull, but the knife stopped at my bone. I gave up in despair.<br><br>
+    <b>Day 5 — April 30</b><br>
+    I think I'm hallucinating. I'm dehydrated. At this point, I carved my name, birth date, and "RIP" on the canyon wall. This night, I had a vision of a young boy running toward a man with one arm.<br><br>
+    <b>Day 6 — May 1</b><br>
+    Today, I feel determination to be free. I snapped my bones and cut myself loose with a dull knife. I feel so free and happy to finally get out.<br><br>
+    <b>— Aron</b></p>
+  </div>
 
-<h3>💬 Comments Section</h3>
-<input id="name" placeholder="Your name">
-<textarea id="comment" placeholder="Write a comment... (Shift+Enter to post)"
-          onkeydown="if(event.key==='Enter'&&event.shiftKey){event.preventDefault();addComment();}"></textarea>
-<button id="submitBtn" onclick="addComment()">Post Comment</button>
-<div id="swearWarning"></div>
-<div id="status"></div>
+  <!-- Afnan — Bethany Hamilton -->
+  <div class="entry">
+    <h3>📖 Afnan — Diary of Bethany Hamilton</h3>
+    <p>Today was one of the hardest days of my life. I went surfing early in the morning because the waves were calm and beautiful. The ocean looked peaceful and I felt excited and free in the water. Everything was normal until suddenly a shark attacked me. I felt shocked, scared and confused.<br><br>
+    After the attack people quickly helped me and took me to safety. I was in pain and very frightened but I tried to stay strong. At the hospital I realized that my life had changed forever. I kept thinking about my family, my future, and whether I would ever surf again.<br><br>
+    Even though I felt afraid I did not want to give up. My family supported me and encouraged me every day. Slowly I started believing in myself again. I learned that being brave does not mean you are never scared — it means continuing even when life becomes difficult.<br><br>
+    This experience changed me a lot. I became stronger and more thankful for my life and family. I learned to never give up and to keep believing in myself no matter how hard life becomes.<br><br>
+    <b>— Bethany</b></p>
+  </div>
 
-<hr>
-<h4>All Comments:</h4>
-<div id="comments"><p><i>Loading comments...</i></p></div>
+  <!-- Abdelrahman Waleed 8B1 -->
+  <div class="entry">
+    <h3>📖 Abdelrahman Waleed, 8B1 — Diary of Bethany Hamilton</h3>
+    <p>On October 2003, a brutal shark mangled my arm and left me traumatized. Yet a miraculous wave of peace fueled my survival.<br><br>
+    Though frustrated, I adapted, eventually winning nationals, silencing cruel critics who called my surfing career hopeless. <i>(Jun 2005)</i><br><br>
+    Heavy waves at the pipeline threatened to crush me, but through intense hard work and sheer determination I managed to seal my victory. <i>(Jun 2014)</i><br><br>
+    Crushing the Fiji Pro demanded agonizing physical strength. Defeating world champions proved my skill. <i>(Jun 2016)</i><br><br>
+    This tragedy left me with many surfing struggles, but a global platform to inspire other athletes. <i>(May 2026)</i><br><br>
+    <b>— Bethany</b></p>
+  </div>
 
-<hr>
-<center>
-  <h3>🌟 Final Message</h3>
-  <p><i>"I don't need easy. I just need possible."</i></p>
-</center>
+  <!-- Leen 8G3 -->
+  <div class="entry">
+    <h3>📖 Leen, 8G3 — Diary of Aron Ralston</h3>
+    <p>I don't even know how to begin writing this… I am still shaking thinking about what happened in that canyon. I went into Bluejohn Canyon in Utah just looking for peace, for adventure, for a moment alone with nature. I never imagined it would turn into a place that almost became my grave.<br><br>
+    When the boulder fell and trapped my arm, time stopped. At first, I thought I would be rescued soon. I told myself to stay strong, that someone would come looking for me. But as hours turned into days, hope slowly started to fade. The silence of the canyon became heavier than the pain itself. I ran out of water. I ran out of strength. But worst of all, I started running out of hope.<br><br>
+    I thought about my family constantly. I even recorded messages for them, trying to say things I never thought would be my last words. That feeling… knowing you might never see the people you love again… it breaks something inside you.<br><br>
+    By the fifth day, I was no longer just surviving — I was facing a choice I never wanted to make. I won't describe everything, but I made the hardest decision of my life because I wanted to live more than anything else in that moment. Every second felt impossible, but somehow I kept going.<br><br>
+    When I finally pulled myself free, I felt a strange mix of pain, relief, and disbelief. I was alive. I had escaped the canyon, but I will never fully leave it behind in my mind. It changed me forever. I don't take a single breath for granted anymore.<br><br>
+    <b>— Aron</b></p>
+  </div>
+
+  <!-- Retal 8B3 — Anne Frank -->
+  <div class="entry">
+    <h3>📖 Retal, 8B3 — Diary of Anne Frank</h3>
+    <p>Dearest Kitty,<br><br>
+    We just arrived in the annex. Mother and father reside in the room next to my and my sister's room. There is a small bathroom and another room where the Van Pels family resides. Mother and my sister are still unable to cope.<br><br>
+    We have to stay hidden all day. The air is rough and the walls feel clammy. My chest aches, making my ribs tighten on my heart. The world came crashing down on us, making us leave everything behind. Nothing can take me back. Father said we can't go back or make loud noises.<br><br>
+    Thoughts overwhelm my mind, repeating what-ifs and hows. My ears ring as imagined scenarios of getting caught consume my mind. The silence is too loud. This state of desiderium is eating at my brain. It might be ephemeral. I hope... Father said to stay vigilant. Any sound could alert them.<br><br>
+    I never saw the day where life felt insipid, slow, unnerving. Walls never caught my attention until now. The rooms are claustrophobic. The ceiling is low, and every sound resonates through the annex.<br><br>
+    "Don't make a sound," father says.<br><br>
+    <b>Yours truly, Anne</b></p>
+  </div>
+
+  <center>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Bethany_Hamilton_2019.jpg" width="320" alt="Bethany Hamilton" style="border-radius:8px;border:3px solid #8b6914;box-shadow:0 4px 16px rgba(0,0,0,0.3);">
+  </center>
+
+  <hr>
+
+  <div class="useful-links">
+    <h3>🔗 Useful Links</h3>
+    <ul>
+      <li><a href="https://bethanyhamilton.com" target="_blank">Bethany Hamilton — Official Website</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Bethany_Hamilton" target="_blank">Bethany Hamilton — Wikipedia</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Aron_Ralston" target="_blank">Aron Ralston — Wikipedia</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Anne_Frank" target="_blank">Anne Frank — Wikipedia</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Diary" target="_blank">What is a Diary?</a></li>
+    </ul>
+  </div>
+
+  <hr>
+
+  <!-- QR Code -->
+  <div class="qr-section">
+    <h3>📱 Scan to Visit This Website</h3>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://yamandiary.github.io/" width="160" height="160" alt="QR Code for yamandiary.github.io">
+    <p>yamandiary.github.io</p>
+  </div>
+
+  <hr>
+
+  <!-- Comments Section -->
+  <h3 class="comments-title">💬 Comments Section</h3>
+  <input id="name" placeholder="Your name">
+  <textarea id="comment" placeholder="Write a comment... (Shift+Enter to post)"
+            onkeydown="if(event.key==='Enter'&&event.shiftKey){event.preventDefault();addComment();}"></textarea>
+  <button id="submitBtn" onclick="addComment()">Post Comment</button>
+  <div id="swearWarning"></div>
+  <div id="status"></div>
+
+  <hr>
+  <h4>All Comments:</h4>
+  <div id="comments"><p><i>Loading comments...</i></p></div>
+
+  <hr>
+  <p class="final-msg">🌟 "I don't need easy. I just need possible."</p>
+
+</div>
 
 <script>
   const SUPABASE_URL = "https://xsazkddliwmhbdrhrtiq.supabase.co";
   const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzYXprZGRsaXdtaGJkcmhydGlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NzAzODYsImV4cCI6MjA5NDI0NjM4Nn0.nRUv0vER8Ebw80cz8px9P17Jydwh_2SjHc4Z_9v9jVE";
-
   const { createClient } = supabase;
   const db = createClient(SUPABASE_URL, ANON_KEY);
 
@@ -245,9 +379,7 @@ But something inside told me to <b>persevere</b>.</p>
     document.getElementById("adminOverlay").classList.add("open");
     setTimeout(() => document.getElementById("adminPassword").focus(), 50);
   }
-  function closeAdminModal() {
-    document.getElementById("adminOverlay").classList.remove("open");
-  }
+  function closeAdminModal() { document.getElementById("adminOverlay").classList.remove("open"); }
   function submitAdmin() {
     if (document.getElementById("adminPassword").value === ADMIN_PASSWORD) {
       isAdmin = true;
@@ -268,10 +400,7 @@ But something inside told me to <b>persevere</b>.</p>
     document.getElementById("editOverlay").classList.add("open");
     setTimeout(() => document.getElementById("editName").focus(), 50);
   }
-  function closeEditModal() {
-    document.getElementById("editOverlay").classList.remove("open");
-    editingId = null;
-  }
+  function closeEditModal() { document.getElementById("editOverlay").classList.remove("open"); editingId = null; }
   async function saveEdit() {
     const name = document.getElementById("editName").value.trim();
     const text = document.getElementById("editText").value.trim();
@@ -298,7 +427,7 @@ But something inside told me to <b>persevere</b>.</p>
     }).join("");
   }
 
-  const SWEARS = ["fuck","f u c k","f*ck","fck","fuq","fuk","fucc","fvck","phuck","fucks","fucking","fucked","fucker","fuckers","fuckhead","motherfuck","motherfucker","motherfucking","shit","sh1t","sh!t","shyt","shite","shits","bullshit","horseshit","dipshit","shithead","shitty","shitstorm","ass","a$$","a55","arse","asshole","a$$hole","assh0le","arsehole","asshat","asswipe","jackass","smartass","dumbass","badass","assface","assbag","assclown","asslicker","bitch","b!tch","b1tch","biatch","biotch","bitches","bitching","bitchy","son of a bitch","cunt","c*nt","cunt","cunts","cuntface","bastard","b4stard","bastards","bastardly","dick","d!ck","d1ck","dik","dicks","dickhead","dickface","dickwad","dickweed","dickbag","dicklicker","cock","c0ck","cok","cocks","cockhead","cockface","cocksucker","cockwad","pussy","p*ssy","pussies","pussycat","twat","tw@t","twats","twatwaffle","prick","pr1ck","pricks","prickhead","slut","sl*t","sl0t","sluts","slutty","whore","wh0re","wh*re","whores","whorehouse","skank","skanky","crap","craps","crappy","crapped","crapper","ass","piss","p1ss","pissy","pisser","pissed","pissoff","pisshead","bastardize","retard","r3tard","retarded","retards","retardation","idiot","idiots","moron","morons","moronic","imbecile","imbeciles","stupid","stupidfuck","dumbfuck","dumbfucker","hell","what the hell","go to hell","damn","d@mn","damnit","goddamn","god damn","goddam","goddamnit","crap","craps","crappy","nigger","n1gger","n!gger","nigg3r","niggers","nigga","n!gga","niggas","faggot","f@ggot","fagg0t","fag","f@g","fags","faggots","dyke","d*ke","kike","k!ke","spic","sp!c","chink","ch1nk","gook","g00k","wetback","weback","beaner","cracker","crakker","honky","honkey","spook","raghead","towelhead","sandnigger","negro","negros","jigaboo","coon","darkie","paki","pakis","wop","dago","guido","zipperhead","slope","slant","jap","japs","kraut","krauts","hymie","heeb","koon","porchmonkey","redneck","white trash","trailer trash","hillbilly","hick","bumpkin","hoe","h0e","hoes","hoebag","skank","skanky","trollop","strumpet","harlot","jezebel","hooker","h00ker","hookers","prostitute","tramp","tramps","sleaze","sleazy","pervert","perverts","perv","pedophile","pedo","nonce","molester","rapist","rape","raping","raper","raped","incest","bestiality","beastiality","necrophilia","sodomy","cum","c*m","cumshot","cumshots","cumming","cummed","cumslut","jizz","j!zz","jizzy","spunk","spunky","semen","creampie","anal","an@l","blowjob","blow job","handjob","hand job","rimjob","rim job","boob","boobs","b00bs","titty","tits","t!ts","tiddy","tiddies","nipple","nipples","cock","ballsack","balls","nutsack","dickhead","foreskin","erection","boner","orgasm","ejaculate","masturbate","masturbation","masturbating","wank","wanker","wanking","tosser","toss off","fingering","clitoris","vagina","penis","scrotum","testicle","testicles","anus","rectum","butthole","butt hole","asscrack","ass crack","diarrhea","diarrhoea","erect","erecting","aroused","arousal","pornography","porn","p0rn","porno","xxx","sexting","sexts","sext","sex","s3x","sexy","sexed","sexier","sexual","sexually","intercourse","fornicate","fornication","sodomize","sodomy","fisting","gangbang","gang bang","threesome","orgy","dildo","vibrator","fleshlight","condom","lube","lubricant","fetish","dominatrix","bdsm","bondage","kinky","kink","naughty","nude","nudity","naked","stripping","stripper","lap dance","escort","call girl","camgirl","onlyfans","playboy","penthouse","hustler","smut","sleaze","filth","filthy","perverse","deprave","depraved","obscene","lewd","lewdly","lewdness","lascivious","lecherous","licentious","lasciviousness","debauchery","debauched","degenerate","depraved","deviant","perverted","twisted","sick fuck","motherfucking","clusterfuck","mindfuck","fuckup","fuckface","fuckwit","fuckboy","fuckgirl","fuckstick","fuckwad","fucknut","fucknugget","shitfuck","shitface","shitpants","shitstain","shitbag","shitbird","shitcock","shitdick","shiteater","dicksucker","cocksucking","cocklicker","cockmonger","cockjockey","cockmaster","assblaster","assfucker","asseater","asslick","asslicker","asslicking","assbang","assbanger","assbite","buttfuck","buttsex","buttsex","buttplug","butt plug","shithole","shitholes","hellhole","douchebag","douche","douchebags","douchecanoe","dickhole","dickbag","nutsack","nutjob","fudgepacker","fudge packer","minge","minges","taint","gooch","choad","chode","scrote","scrotey","cumrag","cumstain","jizzface","jizzrag","spunkface","splooge","splooged","cumface","queef","queefs","queefing","farting","fart","farts","buttcrack","butthole","anus","anal","rectum","colon","balls","ballsack","balllicker","dicksmith","dickwhip","nipples","teat","teats","boob","boobies","boobie","titties","hooters","jugs","melons","rack","knockers","funbags","torpedo tits","thundercunts","twatface","twatwaffle","cuntbag","cuntpuddle","cuntnugget","bitchass","bitchface","dumbcunt","stupidcunt","mothercunter","fuckingcunt","goddamnit","godamnit","godfuckingdamnit","holyshit","holy shit","holy crap","holy fuck","jesus fuck","jesus christ","christ almighty","sweet jesus","for fucks sake","for fuck sake","oh fuck","oh shit","oh crap","oh ass","shitballs","shitbrick","shitgibbon","shitlord","shitmonger","shitmuncher","shitnugget","shitpuddle","shitshow","shitstorm","shitstream","clustershit","clusterfuck","fuckstorm","fucknado","rapey","molesty","murder","murderer","kill yourself","kys","go kill yourself","kill urself","end yourself","suicide","suicidal","die already","drop dead","choke on it","eat shit","eat a dick","eat shit and die","fuck yourself","go fuck yourself","shove it","shove it up","up yours","up your ass","stick it up","blow me","suck my","suck it","lick my","lick me","bite me","kiss my ass","kiss my butt","my ass","your ass","your mom","yo mama","your mama","ur mom","ur mama","your mother","yo momma","your mum","your dad","deez nuts","donut","dumbshit","dumb shit","dumb fuck","dumb cunt","dumb ass","dumb bitch","dip shit","dipshit","turd","turdburgler","turd burglar","turdfucker","turdmuncher","pissflap","pissflaps","pisshole","cumhole","suckhole","asshat","ass hat","shitweasel","shit weasel","fuckweasel","fuck weasel","dickweasel","twatwaffle","twat waffle","cuntwaffle","wankstain","wank stain","spunkstain","thundercunt","thundertwat","bitchcunt","cuntbitch"];
+  const SWEARS = ["fuck","shit","ass","bitch","cunt","bastard","dick","cock","pussy","twat","prick","slut","whore","skank","crap","piss","nigger","nigga","faggot","fag","damn","hell","retard","idiot","moron","imbecile","rape","porn"];
 
   function findSwears(text) {
     const lower = text.toLowerCase();
@@ -341,7 +470,7 @@ But something inside told me to <b>persevere</b>.</p>
     btn.disabled = true;
     status.style.color = "#555";
     status.textContent = "Posting...";
-    const { error } = await db.from("comments").insert({ name: name, text: text, time: Date.now() });
+    const { error } = await db.from("comments").insert({ name, text, time: Date.now() });
     if (error) {
       status.style.color = "#8b0000";
       status.textContent = "Failed to post. Please try again.";
@@ -363,7 +492,7 @@ But something inside told me to <b>persevere</b>.</p>
   }
 
   function esc(s) {
-    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   }
 
   loadComments();
