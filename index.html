@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Voices of Survival</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   * { box-sizing: border-box; }
   body {
@@ -30,7 +29,6 @@
   .byline { text-align: center; color: #8b6914; font-size: 0.9em; margin-bottom: 10px; }
   .banner-img { display: block; margin: 18px auto; border-radius: 6px; border: 3px solid #8b6914; box-shadow: 0 4px 16px rgba(0,0,0,0.3); max-width: 100%; }
   hr { border: none; border-top: 2px solid #c8a04a; margin: 24px auto; width: 80%; }
-
   .entry {
     margin-bottom: 36px;
     padding: 22px 26px;
@@ -41,156 +39,14 @@
   .entry h3 { color: #5a2d00; margin-top: 0; font-size: 1.05em; }
   .entry p { line-height: 1.9; margin: 0; color: #2c1a00; }
   .entry b { color: #5a2d00; }
-
-  .qr-section { text-align: center; margin: 30px 0; }
-  .qr-section img { border: 3px solid #8b6914; border-radius: 6px; padding: 6px; background: white; }
-  .qr-section p { color: #7a4a10; font-size: 0.88em; margin-top: 6px; }
-
   .useful-links { text-align: center; }
   .useful-links ul { list-style: none; padding: 0; }
   .useful-links ul li { margin: 6px 0; }
   .useful-links ul li a { color: #5a2d00; text-decoration: underline; }
   .final-msg { text-align: center; font-style: italic; color: #7a4a10; font-size: 1.05em; margin-top: 20px; }
-
-  /* ---- Comments ---- */
-  h3.comments-title { color: #5a2d00; }
-  input, textarea {
-    width: 100%;
-    padding: 9px 12px;
-    margin-bottom: 8px;
-    border: 1px solid #c8a04a;
-    border-radius: 4px;
-    font-family: Georgia, serif;
-    font-size: 14px;
-    background: #fffdf0;
-    color: #2c1a00;
-  }
-  textarea { height: 80px; resize: vertical; }
-  button {
-    background: #5a2d00;
-    color: #ffe8a0;
-    padding: 10px 26px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-family: Georgia, serif;
-  }
-  button:hover { background: #7a4000; }
-  button:disabled { background: #aaa; cursor: not-allowed; }
-  #comments { margin-top: 12px; max-height: 420px; overflow-y: auto; padding-right: 4px; }
-  #comments::-webkit-scrollbar { width: 6px; }
-  #comments::-webkit-scrollbar-track { background: #f5e8c0; border-radius: 4px; }
-  #comments::-webkit-scrollbar-thumb { background: #8b6914; border-radius: 4px; }
-  .comment-block {
-    background: #fffdf0;
-    border-left: 4px solid #c8a04a;
-    padding: 9px 14px;
-    margin: 8px 0;
-    border-radius: 4px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .comment-content { flex: 1; font-size: 14px; color: #2c1a00; }
-  .admin-actions { display: flex; gap: 6px; flex-shrink: 0; }
-  .admin-actions button { padding: 4px 10px; font-size: 12px; }
-  .btn-delete { background: #8b0000; }
-  .btn-delete:hover { background: #600000; }
-  .btn-edit { background: #1a5200; }
-  .btn-edit:hover { background: #0d3300; }
-  #status { font-size: 13px; margin-top: 6px; min-height: 18px; }
-  #swearWarning { margin: 4px 0; }
-
-  /* ---- Admin badge ---- */
-  #adminBadge {
-    display: none;
-    position: fixed;
-    top: 12px; right: 16px;
-    background: #5a2d00;
-    color: #ffe8a0;
-    padding: 6px 16px;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: bold;
-    border: 1px solid #c8a04a;
-    z-index: 999;
-    letter-spacing: 0.5px;
-  }
-
-  /* ---- Modals ---- */
-  .overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(30, 15, 0, 0.65);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-  }
-  .overlay.open { display: flex; }
-  .modal {
-    background: #fff8dc;
-    border: 2px solid #8b6914;
-    border-radius: 6px;
-    width: 340px;
-    overflow: hidden;
-    box-shadow: 0 6px 28px rgba(0,0,0,0.5);
-  }
-  .modal-header {
-    background: #5a2d00;
-    color: #ffe8a0;
-    padding: 12px 18px;
-    font-size: 15px;
-    font-weight: bold;
-    font-family: Georgia, serif;
-  }
-  .modal-body { padding: 18px 18px 14px; }
-  .modal-body input, .modal-body textarea { background: #fffdf0; border: 1px solid #c8a04a; color: #2c1a00; }
-  .btn-row { display: flex; gap: 8px; margin-top: 10px; }
-  .btn-row button { flex: 1; padding: 9px; font-size: 14px; }
-  .btn-cancel { background: #6b5533; }
-  .btn-cancel:hover { background: #4a3a20; }
-  .btn-save { background: #1a5200; }
-  .btn-save:hover { background: #0d3300; }
-  #adminError { color: #8b0000; font-size: 13px; min-height: 18px; margin-top: 4px; }
 </style>
 </head>
 <body>
-
-<div id="adminBadge">🔑 Admin Mode</div>
-
-<!-- Admin login modal -->
-<div class="overlay" id="adminOverlay">
-  <div class="modal">
-    <div class="modal-header">🔐 Admin Access</div>
-    <div class="modal-body">
-      <input type="password" id="adminPassword" placeholder="Enter password"
-             onkeydown="if(event.key==='Enter') submitAdmin()">
-      <div id="adminError"></div>
-      <div class="btn-row">
-        <button onclick="submitAdmin()">Unlock</button>
-        <button class="btn-cancel" onclick="closeAdminModal()">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Edit comment modal -->
-<div class="overlay" id="editOverlay">
-  <div class="modal">
-    <div class="modal-header">✏️ Edit Comment</div>
-    <div class="modal-body">
-      <input type="text" id="editName" placeholder="Name">
-      <textarea id="editText" placeholder="Comment"></textarea>
-      <div class="btn-row">
-        <button class="btn-save" onclick="saveEdit()">Save</button>
-        <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <div class="container">
 
@@ -222,7 +78,7 @@
     <b>— A voice of justice</b></p>
   </div>
 
-  <!-- Farah 8G3 — Aron Ralston -->
+  <!-- Farah 8G3 -->
   <div class="entry">
     <h3>📖 Farah, 8G3 — Diary of Aron Ralston</h3>
     <p><b>April 26, 2003</b><br>
@@ -232,18 +88,15 @@
     Still, I am trying to stay brave and positive. I know I cannot give up. I tell myself, "I'm strong enough to survive this." I drank my little water and ate my two burritos and tried to think how to escape. Even though fear fills up my mind, a small part of me still feels hopeful that I will make it home safely.</p>
   </div>
 
-  <!-- Retal 8G3 — Aron Ralston -->
+  <!-- Retal 8G3 -->
   <div class="entry">
     <h3>📖 Retal, 8G3 — Diary of Aron Ralston</h3>
     <p>I didn't tell anyone about my plans. I'm going canyoneering in Bluejohn Canyon. I packed two burritos and water.<br><br>
-    Today is the day I go to the canyon. When I reached Wayne County, Utah, I canyoneered for a while until a boulder became dislodged and crashed onto my arm. It's heavy. Blood drips from my arm onto my shoes. I can't move it. Dark red blood trickles down as I lose sensation in my arm. My arm turns a bluish tint. I can't feel it. Tingles and numbness spread through my arm. Am I going to survive? I didn't say goodbye…<br><br>
-    It has been a day since I got trapped here. My lips chap as I reach for the water. My stomach churns. Do I scream for help? Can I really cut off my arm? Thoughts overwhelm my mind as I scramble for ideas to escape alive.<br><br>
-    My pocket knife. Right. I'll wait.<br><br>
-    My phone has no service. Calm down. If I stay like this, I won't make it. I eat some of my food and take small sips of water to keep myself calm. My arm is losing circulation. I record a video to say goodbye to my family. I experiment with tourniquets to prepare for amputating my arm.<br><br>
-    My food supply is decreasing, and my water has run out. Regrets and what-ifs run through my head. I can't scream. I have nothing to drink. The pain in my arm is gone, replaced by numbness.<br><br>
+    Today is the day I go to the canyon. When I reached Wayne County, Utah, I canyoneered for a while until a boulder became dislodged and crashed onto my arm. It's heavy. Blood drips from my arm onto my shoes. I can't move it. Dark red blood trickles down as I lose sensation in my arm. My arm turns a bluish tint. I can't feel it. Am I going to survive? I didn't say goodbye…<br><br>
+    It has been a day since I got trapped here. My lips chap as I reach for the water. Do I scream for help? Can I really cut off my arm? Thoughts overwhelm my mind as I scramble for ideas to escape alive. My phone has no service. Calm down. I eat some of my food and take small sips of water. My arm is losing circulation. I record a video to say goodbye to my family. I experiment with tourniquets to prepare for amputating my arm.<br><br>
+    My food supply is decreasing, and my water has run out. Regrets and what-ifs run through my head. The pain in my arm is gone, replaced by numbness.<br><br>
     Today marks the fifth day. I have nothing left to eat or drink. I'm seeing things. I close my eyes as visions of me playing with a child without my arm overwhelm my mind. A small sense of warmth fills me. Maybe I'll survive.<br><br>
-    This is the sixth day. It's time.<br><br>
-    I bite my lip as I prepare to amputate my arm. "It's gonna be okay," I repeat as I take out my pocket knife. Hours pass as I continue cutting. Finally, I sigh in relief. It's over.<br><br>
+    This is the sixth day. It's time. I bite my lip as I prepare to amputate my arm. "It's gonna be okay," I repeat as I take out my pocket knife. Hours pass as I continue cutting. Finally, I sigh in relief. It's over.<br><br>
     I rush out and find a family nearby. They rush me to safety and call the authorities. I survived. Though I lost an arm, I made it back alive.<br><br>
     <b>Yours, Aron</b></p>
   </div>
@@ -256,17 +109,17 @@
     <b>Day 2 — April 27, 2003</b><br>
     I've tried to use my climbing ropes and gear to create a pulley system to move the rock; sadly, it didn't work. I regret ever coming here. I'm getting very tired and only have 2 burritos left.<br><br>
     <b>Day 3 — April 28</b><br>
-    I can't feel my arm at all. I'm in serious trouble. I'm ready to say goodbye. I recorded video messages for my family on the camcorder. I explained everything that happened. I'm almost out of water and food. It's getting rough. My hope is fading.<br><br>
+    I can't feel my arm at all. I'm in serious trouble. I'm ready to say goodbye. I recorded video messages for my family on the camcorder. I'm almost out of water and food. My hope is fading.<br><br>
     <b>Day 4 — April 29</b><br>
     Today, I ran out of food and water. I have to get out fast. The boulder hasn't moved an inch, so I had to try cutting my arm with a knife that's dull, but the knife stopped at my bone. I gave up in despair.<br><br>
     <b>Day 5 — April 30</b><br>
-    I think I'm hallucinating. I'm dehydrated. At this point, I carved my name, birth date, and "RIP" on the canyon wall. This night, I had a vision of a young boy running toward a man with one arm.<br><br>
+    I think I'm hallucinating. I'm dehydrated. I carved my name, birth date, and "RIP" on the canyon wall. This night, I had a vision of a young boy running toward a man with one arm.<br><br>
     <b>Day 6 — May 1</b><br>
     Today, I feel determination to be free. I snapped my bones and cut myself loose with a dull knife. I feel so free and happy to finally get out.<br><br>
     <b>— Aron</b></p>
   </div>
 
-  <!-- Afnan — Bethany Hamilton -->
+  <!-- Afnan -->
   <div class="entry">
     <h3>📖 Afnan — Diary of Bethany Hamilton</h3>
     <p>Today was one of the hardest days of my life. I went surfing early in the morning because the waves were calm and beautiful. The ocean looked peaceful and I felt excited and free in the water. Everything was normal until suddenly a shark attacked me. I felt shocked, scared and confused.<br><br>
@@ -293,7 +146,7 @@
     <p>I don't even know how to begin writing this… I am still shaking thinking about what happened in that canyon. I went into Bluejohn Canyon in Utah just looking for peace, for adventure, for a moment alone with nature. I never imagined it would turn into a place that almost became my grave.<br><br>
     When the boulder fell and trapped my arm, time stopped. At first, I thought I would be rescued soon. I told myself to stay strong, that someone would come looking for me. But as hours turned into days, hope slowly started to fade. The silence of the canyon became heavier than the pain itself. I ran out of water. I ran out of strength. But worst of all, I started running out of hope.<br><br>
     I thought about my family constantly. I even recorded messages for them, trying to say things I never thought would be my last words. That feeling… knowing you might never see the people you love again… it breaks something inside you.<br><br>
-    By the fifth day, I was no longer just surviving — I was facing a choice I never wanted to make. I won't describe everything, but I made the hardest decision of my life because I wanted to live more than anything else in that moment. Every second felt impossible, but somehow I kept going.<br><br>
+    By the fifth day, I was no longer just surviving — I was facing a choice I never wanted to make. I made the hardest decision of my life because I wanted to live more than anything else in that moment. Every second felt impossible, but somehow I kept going.<br><br>
     When I finally pulled myself free, I felt a strange mix of pain, relief, and disbelief. I was alive. I had escaped the canyon, but I will never fully leave it behind in my mind. It changed me forever. I don't take a single breath for granted anymore.<br><br>
     <b>— Aron</b></p>
   </div>
@@ -304,14 +157,14 @@
     <p>Dearest Kitty,<br><br>
     We just arrived in the annex. Mother and father reside in the room next to my and my sister's room. There is a small bathroom and another room where the Van Pels family resides. Mother and my sister are still unable to cope.<br><br>
     We have to stay hidden all day. The air is rough and the walls feel clammy. My chest aches, making my ribs tighten on my heart. The world came crashing down on us, making us leave everything behind. Nothing can take me back. Father said we can't go back or make loud noises.<br><br>
-    Thoughts overwhelm my mind, repeating what-ifs and hows. My ears ring as imagined scenarios of getting caught consume my mind. The silence is too loud. This state of desiderium is eating at my brain. It might be ephemeral. I hope... Father said to stay vigilant. Any sound could alert them.<br><br>
+    Thoughts overwhelm my mind, repeating what-ifs and hows. My ears ring as imagined scenarios of getting caught consume my mind. The silence is too loud. Father said to stay vigilant. Any sound could alert them.<br><br>
     I never saw the day where life felt insipid, slow, unnerving. Walls never caught my attention until now. The rooms are claustrophobic. The ceiling is low, and every sound resonates through the annex.<br><br>
     "Don't make a sound," father says.<br><br>
     <b>Yours truly, Anne</b></p>
   </div>
 
   <center>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Bethany_Hamilton_2019.jpg" width="320" alt="Bethany Hamilton" style="border-radius:8px;border:3px solid #8b6914;box-shadow:0 4px 16px rgba(0,0,0,0.3);">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Bethany_Hamilton_2019.jpg" width="320" alt="Bethany Hamilton" style="border-radius:8px;border:3px solid #8b6914;box-shadow:0 4px 16px rgba(0,0,0,0.3);margin:20px 0;">
   </center>
 
   <hr>
@@ -327,166 +180,8 @@
     </ul>
   </div>
 
-  <hr>
-
-  <!-- Comments Section -->
-  <h3 class="comments-title">💬 Comments Section</h3>
-  <input id="name" placeholder="Your name">
-  <textarea id="comment" placeholder="Write a comment... (Shift+Enter to post)"
-            onkeydown="if(event.key==='Enter'&&event.shiftKey){event.preventDefault();addComment();}"></textarea>
-  <button id="submitBtn" onclick="addComment()">Post Comment</button>
-  <div id="swearWarning"></div>
-  <div id="status"></div>
-
-  <hr>
-  <h4>All Comments:</h4>
-  <div id="comments"><p><i>Loading comments...</i></p></div>
-
-  <hr>
   <p class="final-msg">🌟 "I don't need easy. I just need possible."</p>
 
 </div>
-
-<script>
-  const SUPABASE_URL = "https://xsazkddliwmhbdrhrtiq.supabase.co";
-  const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzYXprZGRsaXdtaGJkcmhydGlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NzAzODYsImV4cCI6MjA5NDI0NjM4Nn0.nRUv0vER8Ebw80cz8px9P17Jydwh_2SjHc4Z_9v9jVE";
-  const { createClient } = supabase;
-  const db = createClient(SUPABASE_URL, ANON_KEY);
-
-  const ADMIN_PASSWORD = "Yaman@321";
-  let isAdmin = false;
-  let editingId = null;
-
-  const held = new Set();
-  document.addEventListener("keydown", e => {
-    held.add(e.key.toUpperCase());
-    if (held.has("C") && held.has("A") && held.has("S") && !isAdmin) openAdminModal();
-  });
-  document.addEventListener("keyup", e => held.delete(e.key.toUpperCase()));
-
-  function openAdminModal() {
-    document.getElementById("adminPassword").value = "";
-    document.getElementById("adminError").textContent = "";
-    document.getElementById("adminOverlay").classList.add("open");
-    setTimeout(() => document.getElementById("adminPassword").focus(), 50);
-  }
-  function closeAdminModal() { document.getElementById("adminOverlay").classList.remove("open"); }
-  function submitAdmin() {
-    if (document.getElementById("adminPassword").value === ADMIN_PASSWORD) {
-      isAdmin = true;
-      closeAdminModal();
-      document.getElementById("adminBadge").style.display = "block";
-      loadComments();
-    } else {
-      document.getElementById("adminError").textContent = "Incorrect password.";
-      document.getElementById("adminPassword").value = "";
-      document.getElementById("adminPassword").focus();
-    }
-  }
-
-  function openEditModal(id, name, text) {
-    editingId = id;
-    document.getElementById("editName").value = name;
-    document.getElementById("editText").value = text;
-    document.getElementById("editOverlay").classList.add("open");
-    setTimeout(() => document.getElementById("editName").focus(), 50);
-  }
-  function closeEditModal() { document.getElementById("editOverlay").classList.remove("open"); editingId = null; }
-  async function saveEdit() {
-    const name = document.getElementById("editName").value.trim();
-    const text = document.getElementById("editText").value.trim();
-    if (!name || !text) return;
-    const { error } = await db.from("comments").update({ name, text }).eq("id", editingId);
-    if (error) { alert("Could not save edit. Try again."); return; }
-    closeEditModal();
-    loadComments();
-  }
-
-  async function loadComments() {
-    const box = document.getElementById("comments");
-    const { data, error } = await db.from("comments").select("*").order("time", { ascending: false }).limit(1000);
-    if (error || !data) { box.innerHTML = "<p><i>Could not load comments.</i></p>"; return; }
-    if (!data.length) { box.innerHTML = "<p><i>No comments yet. Be the first!</i></p>"; return; }
-    box.innerHTML = data.map(c => {
-      const actions = isAdmin
-        ? '<div class="admin-actions">'
-          + '<button class="btn-edit" onclick="openEditModal(' + c.id + ',' + JSON.stringify(c.name) + ',' + JSON.stringify(c.text) + ')">Edit</button>'
-          + '<button class="btn-delete" onclick="deleteComment(' + c.id + ')">Delete</button>'
-          + '</div>'
-        : "";
-      return '<div class="comment-block"><div class="comment-content"><b>' + esc(c.name) + ':</b> ' + esc(c.text) + '</div>' + actions + '</div>';
-    }).join("");
-  }
-
-  const SWEARS = ["fuck","shit","ass","bitch","cunt","bastard","dick","cock","pussy","twat","prick","slut","whore","skank","crap","piss","nigger","nigga","faggot","fag","damn","hell","retard","idiot","moron","imbecile","rape","porn"];
-
-  function findSwears(text) {
-    const lower = text.toLowerCase();
-    const found = [];
-    for (const word of SWEARS) {
-      const regex = new RegExp("\\b" + word.replace(/[.*+?^${}()|[\]\\]/g,"\\$&") + "\\b", "gi");
-      const matches = text.match(regex);
-      if (matches) matches.forEach(m => { if (!found.includes(m.toLowerCase())) found.push(m.toLowerCase()); });
-    }
-    return found;
-  }
-
-  function showSwearWarning(nameSwears, textSwears) {
-    const box = document.getElementById("swearWarning");
-    const all = [...new Set([...nameSwears, ...textSwears])];
-    if (!all.length) { box.innerHTML = ""; return; }
-    const wordSpans = all.map(w => '<span style="color:#8b0000;font-weight:bold;background:#ffe0e0;padding:1px 5px;border-radius:3px;">' + esc(w) + '</span>').join(" ");
-    box.innerHTML = '<div style="margin:6px 0;padding:8px 12px;background:#fff0f0;border:1px solid #cc0000;border-radius:4px;font-size:13px;color:#8b0000;">⚠️ Please remove these words before posting: ' + wordSpans + '</div>';
-  }
-
-  async function addComment() {
-    const name = document.getElementById("name").value.trim();
-    const text = document.getElementById("comment").value.trim();
-    const status = document.getElementById("status");
-    const btn = document.getElementById("submitBtn");
-    document.getElementById("swearWarning").innerHTML = "";
-    if (!name || !text) {
-      status.style.color = "#8b0000";
-      status.textContent = "Please fill in both your name and a comment.";
-      return;
-    }
-    const nameSwears = findSwears(name);
-    const textSwears = findSwears(text);
-    if (nameSwears.length || textSwears.length) {
-      showSwearWarning(nameSwears, textSwears);
-      status.style.color = "#8b0000";
-      status.textContent = "Your comment contains inappropriate language. Please fix the words above.";
-      return;
-    }
-    btn.disabled = true;
-    status.style.color = "#555";
-    status.textContent = "Posting...";
-    const { error } = await db.from("comments").insert({ name, text, time: Date.now() });
-    if (error) {
-      status.style.color = "#8b0000";
-      status.textContent = "Failed to post. Please try again.";
-    } else {
-      status.style.color = "#004d00";
-      status.textContent = "✅ Comment posted!";
-      document.getElementById("name").value = "";
-      document.getElementById("comment").value = "";
-      document.getElementById("swearWarning").innerHTML = "";
-      loadComments();
-    }
-    btn.disabled = false;
-  }
-
-  async function deleteComment(id) {
-    if (!confirm("Delete this comment?")) return;
-    await db.from("comments").delete().eq("id", id);
-    loadComments();
-  }
-
-  function esc(s) {
-    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-  }
-
-  loadComments();
-</script>
 </body>
 </html>
